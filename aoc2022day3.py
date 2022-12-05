@@ -3,9 +3,7 @@ import string
 with open('C:/Users/User/Documents/input.txt') as f:
     my_input2 = f.read().split('\n')    
 f.close()
-my_input = [[line[:int(len(line)/2)], line[int(len(line)/2):]] for line in my_input2]
-
-my_input = [[list(set(line[0])), list(set(line[1]))] for line in my_input]
+my_input = [[list(set(line[:int(len(line)/2)])), list(set(line[int(len(line)/2):]))] for line in my_input2]
 priorities = [let for line in my_input for let in line[0] if let in line[1]]
 alphabet = {k:(v + 1) for v, k in enumerate(string.ascii_letters)}
 

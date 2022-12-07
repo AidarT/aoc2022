@@ -30,7 +30,6 @@ while len(fullpaths) > 0:
             total_sizes[path] += dirs[path]
             dels.append(path)
         else:
-            dels2 = []
             for part in val:
                 if part not in fullpaths:
                     total_sizes[path] += total_sizes[part]

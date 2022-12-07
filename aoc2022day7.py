@@ -3,40 +3,45 @@ with open('C:/Users/User/Documents/input.txt') as f:
 f.close()
 
 fullpaths = {"/":[]}
-paths = {}
+backpaths = {}
 dirs = {"/":0}
-files = {}
 
 for line in my_input:
     if line == "$ cd /":
         last = "/"
     elif line == "$ cd ..":
-        last = paths[last]
-    elif line[0:4] == "$ cd":       
-        last = line.split(' ')[2]
+        last = backpaths[last]
+    elif line[0:4] == "$ cd":
+        last = last + line.split(' ')[2]
         fullpaths[last] = []
     elif line[0:3] == "dir":
-        dirs[line.split(' ')[1]] = 0
-        paths[line.split(' ')[1]] = last
-        fullpaths[last].append(line.split(' ')[1])
+        dirs[last + line.split(' ')[1]] = 0
+        backpaths[last + line.split(' ')[1]] = last
+        fullpaths[last].append(last + line.split(' ')[1])
     elif line[0:4] != "$ ls":
         dirs[last] += int(line.split(' ')[0])
-        files[line.split(' ')[1]] = int(line.split(' ')[0])
-
-def calc_size(fullpaths, cur, dirs, total_sizes):
-    if cur in fullpaths and len(fullpaths[cur]) > 0:
-        for part in fullpaths[cur]:
-            return dirs[cur] + calc_size(fullpaths, part, dirs, total_sizes)            
-    else:
-        return dirs[cur]
-
+    
+del last, line, f
 total_sizes = {k:0 for k in dirs}
-for dir in dirs:
-    total_sizes[dir] = calc_size(fullpaths, dir, dirs, total_sizes)
-#total_sizes["/"] = sum(dirs.values())
-        
+while len(fullpaths) > 0:
+    dels = []
+    for path, val in fullpaths.items():
+        if len(val) == 0:
+            total_sizes[path] += dirs[path]
+            dels.append(path)
+        else:
+            dels2 = []
+            for part in val:
+                if part not in fullpaths:
+                    total_sizes[path] += total_sizes[part]
+                    fullpaths[path].pop(fullpaths[path].index(part))
+    for atr in dels:
+        fullpaths.pop(atr)
+    
 part1 = sum([k for k in total_sizes.values() if k <= 100000])
 
-part2 = 0
+unused = 70000000 - total_sizes["/"] - 30000000
+freed = {k:(v + unused) for k,v in total_sizes.items() if v + unused > 0}
+part2 = total_sizes[[k for k,v in freed.items() if v == min(freed.values())][0]]
 
 print(str(part1) + " " + str(part2))

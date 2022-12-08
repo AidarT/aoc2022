@@ -2,6 +2,34 @@ with open('C:/Users/User/Documents/input.txt') as f:
     my_input = list(map(lambda a: list(a), f.read().split('\n')))
 f.close()
 
+def isVisible(my_input, height, i, j, bord1, bord2, step, cond, isColumn):
+    if isColumn:
+        for i1 in range(bord1, bord2, step):
+            if int(my_input[i1][j]) >= int(height):
+                return False
+        if i1 == cond and int(my_input[i1][j]) < int(height):
+            return True
+    else:
+        for j1 in range(bord1, bord2, step):
+            if int(my_input[i][j1]) >= int(height):
+                return False
+        if j1 == cond and int(my_input[i][j1]) < int(height):
+            return True
+        
+def calcScore(my_input, height, i, j, bord1, bord2, step, isColumn):
+    score = 0
+    if isColumn:        
+        for i1 in range(bord1, bord2, step):
+            score += 1
+            if int(my_input[i1][j]) >= int(height):
+                break
+    else:
+        for j1 in range(bord1, bord2, step):
+            score += 1
+            if int(my_input[i][j1]) >= int(height):
+                break
+    return score
+
 scores = [[1 for x in line] for line in my_input]
 part1 = 0
 for i, line in enumerate(my_input):
@@ -9,55 +37,17 @@ for i, line in enumerate(my_input):
         if i == 0 or j == 0 or i == len(my_input)-1 or j == len(line)-1:
             part1 += 1            
         else:
-            visible = True
-            score = 0
-            for i1 in range(i+1, len(my_input)):
-                score += 1
-                if int(my_input[i1][j]) >= int(height):                    
-                    visible = False
-                    break
-            scores[i][j] *= score
-            if i1 == len(my_input)-1 and int(my_input[i1][j]) < int(height):
-                visible = True
+            visible = isVisible(my_input, height, i, j, i+1, len(my_input), 1, len(my_input)-1, True)            
+            scores[i][j] *= calcScore(my_input, height, i, j, i+1, len(my_input), 1, True)
             if not visible:
-                for i1 in range(i-1, -1, -1):
-                    if int(my_input[i1][j]) >= int(height):
-                        visible = False
-                        break
-                if i1 == 0 and int(my_input[i1][j]) < int(height):
-                    visible = True
-            score = 0
-            for i1 in range(i-1, -1, -1):
-                score += 1
-                if int(my_input[i1][j]) >= int(height):
-                    break
-            scores[i][j] *= score
+                visible = isVisible(my_input, height, i, j, i-1, -1, -1, 0, True)
+            scores[i][j] *= calcScore(my_input, height, i, j, i-1, -1, -1, True)
             if not visible:
-                for j1 in range(j+1, len(line)):
-                    if int(my_input[i][j1]) >= int(height):
-                        visible = False
-                        break
-                if j1 == len(line)-1 and int(my_input[i][j1]) < int(height):
-                    visible = True
-            score = 0
-            for j1 in range(j+1, len(line)):
-                score += 1
-                if int(my_input[i][j1]) >= int(height):
-                    break
-            scores[i][j] *= score
+                visible = isVisible(my_input, height, i, j, j+1, len(line), 1, len(line)-1, False)
+            scores[i][j] *= calcScore(my_input, height, i, j, j+1, len(line), 1, False)
             if not visible:
-                for j1 in range(j-1, -1, -1):
-                    if int(my_input[i][j1]) >= int(height):
-                        visible = False
-                        break
-                if j1 == 0 and int(my_input[i][j1]) < int(height):
-                    visible = True
-            score = 0
-            for j1 in range(j-1, -1, -1):
-                score += 1
-                if int(my_input[i][j1]) >= int(height):
-                    break
-            scores[i][j] *= score
+                visible = isVisible(my_input, height, i, j, j-1, -1, -1, 0, False)
+            scores[i][j] *= calcScore(my_input, height, i, j, j-1, -1, -1, False)
             if visible:
                 part1 += 1
 

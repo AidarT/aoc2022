@@ -100,7 +100,7 @@ monkeys = []
 for m in my_input:
     for line in m:
         if line.find('Monkey') != -1:
-            m_temp = monkey(re.findall(r'\d+', line)[0])            
+            m_temp = monkey(re.findall(r'\d+', line)[0])
             monkeys.append(m_temp)
         if line.find('items') != -1:
             monkeys[-1].pullItems(re.findall(r'\d+', line))

@@ -53,7 +53,6 @@ def print_map():
 map_, map_min_x = map_create(0)
 fill_map()
 part1 = 0
-
 while True:
     sand = (500,-1)
     next_ = nextMoveIs(sand)
@@ -62,7 +61,6 @@ while True:
     else:
         map_[next_] = "o"
         part1 += 1
-
 print_map()
 
 def fill_row(next_):
@@ -71,7 +69,6 @@ def fill_row(next_):
     for y in range(0, map_max_y + 1):
         map_[(x,y)] = "."
     map_[(x,map_max_y)] = "#"
-    
 
 def part2NextMoveIs(cur):
     for move in moves:
@@ -85,7 +82,6 @@ def part2NextMoveIs(cur):
 map_, map_min_x = map_create(2, True)
 fill_map()
 part2 = 0
-
 while True:
     sand = (500,-1)
     next_ = part2NextMoveIs(sand)
@@ -96,7 +92,6 @@ while True:
     else:
         map_[next_] = "o"
         part2 += 1
-
 print_map()
 
 print(str(part1) + " " + str(part2))
